@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Valentine 🤍</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffb6c1, #ff4f7b);
+      font-family: 'Georgia', serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* MAIN CARD */
+    .card {
+      position: relative;
+      width: 92%;
+      max-width: 420px;
+      padding: 32px 26px;
+      border-radius: 22px;
+      text-align: center;
+      overflow: hidden;
+      animation: fadeIn 1.6s ease forwards;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url('Chlo.JPEG'); /* 👈 main card background */
+      background-size: cover;
+      background-position: center;
+      /* filter: blur(6px); */
+      transform: scale(1.1);
+      z-index: 0;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 79, 123, 0.55);
+      z-index: 1;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 1.9em;
+      margin-bottom: 14px;
+    }
+
+    .verse {
+      font-style: italic;
+      font-size: 0.9em;
+      margin-bottom: 22px;
+      line-height: 1.5;
+      opacity: 0.95;
+    }
+
+    p {
+      font-size: 1.05em;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    button {
+      padding: 12px 26px;
+      border-radius: 30px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .yes {
+      background: linear-gradient(135deg, #fff1c1, #ffd700);
+      color: #7a003c;
+      font-weight: bold;
+      box-shadow: 0 0 14px rgba(255,215,0,0.7);
+    }
+
+    .yes:hover { transform: scale(1.05); }
+
+    .no {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid #fff;
+      position: relative;
+    }
+
+    /* THANK YOU OVERLAY */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .overlay-content {
+      position: relative;
+      background: rgba(255,255,255,0.1);
+      color: #7a003c;
+      padding: 30px 24px;
+      border-radius: 18px;
+      max-width: 380px;
+      text-align: center;
+      -webkit-text-fill-color: #fff;
+      animation: popIn 0.4s ease;
+      overflow: hidden;
+    }
+
+    .overlay-content::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url('Chlozito.JPEG'); /* 👈 final thank-you background */
+      background-size: cover;
+      background-position: center;
+      /* filter: blur(6px); */
+      transform: scale(1.1);
+      z-index: 0;
+    }
+
+    .overlay-content::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 79, 123, 0.55);
+      z-index: 1;
+    }
+
+    .overlay-content > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .close {
+      margin-top: 22px;
+      padding: 10px 24px;
+      border-radius: 22px;
+      border: none;
+      background: #ff4f7b;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* HEARTS */
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 18px;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-110vh); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <audio id="loveSong">
+    <source src="Snoh Aalegra - Whoa.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+    <h1>Will you be my Valentine? 🤍</h1>
+
+    <div class="verse">
+      “Love is patient, love is kind…  
+      It always protects, trusts, hopes, and perseveres.”  
+      <br>— 1 Corinthians 13:4–7
+    </div>
+
+    <p id="mainText"></p>
+
+    <div class="buttons">
+      <button class="yes" id="yesBtn">Yes 🤍</button>
+      <button class="no" id="noBtn">No</button>
+    </div>
+  </div>
+
+  <!-- THANK YOU OVERLAY -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-content" id="overlayContent"></div>
+  </div>
+
+  <script>
+    const herName = "My Love";
+
+    const mainText = document.getElementById('mainText');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const song = document.getElementById('loveSong');
+    const overlay = document.getElementById('overlay');
+    const overlayContent = document.getElementById('overlayContent');
+
+    mainText.innerHTML = `
+      ${herName}, Jesus is your first love — always.<br><br>
+      I don’t want to replace that.  
+      I only want to love you in a way that reflects Him:
+      with patience, prayer, and purpose.<br><br>
+      Would you walk this season with me?
+    `;
+
+    yesBtn.addEventListener('click', () => {
+      song.currentTime = 91; // 1:31
+      song.volume = 0.85;
+      song.play();
+
+      overlayContent.innerHTML = `
+        <h2>🤍 Thank you, ${herName}</h2>
+        <p>
+          Lord Jesus,<br><br>
+          Thank You for ${herName}.  
+          Thank You for her heart, her faith, and her walk with You.<br><br>
+          If this path is from You, guide our steps with wisdom and peace.  
+          If not, guard her heart and keep her close to You always.<br><br>
+          May You remain her first love — now and forever.<br><br>
+          Amen 🤍
+        </p>
+        <button class="close" onclick="overlay.style.display='none'">🤍</button>
+      `;
+      overlay.style.display = 'flex';
+
+      for (let i = 0; i < 18; i++) createHeart();
+    });
+
+    /* NO BUTTON DODGE - INFINITE LOOP */
+    function dodgeNoButton() {
+      const x = Math.random() * 180 - 90;
+      const y = Math.random() * 120 - 60;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    noBtn.addEventListener('mouseenter', dodgeNoButton);
+    noBtn.addEventListener('touchstart', e => { e.preventDefault(); dodgeNoButton(); });
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = '💗';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 4 + Math.random() * 3 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+  </script>
+
+</body>
+</html>
